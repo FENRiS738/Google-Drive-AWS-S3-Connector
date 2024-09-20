@@ -1,0 +1,4 @@
+g_venv
+g_venv/
+/g_venv
+.env
