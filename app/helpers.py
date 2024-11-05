@@ -11,8 +11,12 @@ def download_file_from_google_drive(file_id):
         file = gdown.download(file_url, quiet=False)
         return file
     except  exceptions.FileURLRetrievalError as e:
+        if os.path.exists(file):
+            os.remove(file)
         raise HTTPException(403, detail=f"Unable to download file from Google Drive: {str(e)}") from e
     except Exception as ex:
+        if os.path.exists(file):
+            os.remove(file)
         raise HTTPException(500, detail=f"Unexpected error during file upload: {str(ex)}") from ex
 
 
@@ -33,8 +37,10 @@ def upload_to_s3(file_id):
 
         return response
     except FileNotFoundError as fx:
-        os.remove(file)
+        if os.path.exists(file):
+            os.remove(file)
         raise HTTPException(404, detail=f"File not found: {str(fx)}") from fx
     except Exception as ex:
-        os.remove(file)
+        if os.path.exists(file):
+            os.remove(file)
         raise HTTPException(500, detail=f"Unexpected error during file upload: {str(ex)}") from ex
